@@ -219,8 +219,7 @@ read_struct_loop(IProto0, SDict, RTuple) ->
     end.
 
 skip_field(FType, IProto0, SDict, RTuple) ->
-    FTypeAtom = thrift_protocol:typeid_to_atom(FType),
-    {IProto1, ok} = thrift_protocol:skip(IProto0, FTypeAtom),
+    {IProto1, ok} = thrift_protocol:skip(IProto0, FType),
     {IProto2, ok} = read(IProto1, field_end),
     read_struct_loop(IProto2, SDict, RTuple).
 
@@ -252,7 +251,13 @@ skip(Proto0, list) ->
 
 skip(Proto0, Type) when is_atom(Type) ->
     {Proto1, _Ignore} = read(Proto0, Type),
+    {Proto1, ok};
+
+skip(Proto0, Type) when is_integer(Type) ->
     {Proto1, ok}.
+
+skip() ->
+
 
 
 skip_struct_loop(Proto0) ->
